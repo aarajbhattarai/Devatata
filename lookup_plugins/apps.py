@@ -21,10 +21,10 @@ DOCUMENTATION = """
         applications
     description: >
         Lookup ready-to-deploy applications following recommended Arnold
-        applications' tree, e.g. for the "richie" application and the
+        applications' tree, e.g. for the "atkans" application and the
         "apps" ``apps_path``::
 
-            apps/richie
+            apps/atkans
             ├── templates
             │   ├── services
             │   │   ├── app
@@ -33,7 +33,7 @@ DOCUMENTATION = """
             │   │   │   └── *.yml.j2
             │   │   ├── nginx
             │   │   │   ├── configs
-            │   │   │   │   └── richie.conf.j2
+            │   │   │   │   └── atkans.conf.j2
             │   │   │   └── *.yml.j2
             │   │   └── postgresql
             │   │       └── *.yml.j2
@@ -56,16 +56,16 @@ DOCUMENTATION = """
 
             [
                 {
-                    "name": "richie",
+                    "name": "atkans",
                     "services": [
                         {
                             "configs": [
-                                "apps/richie/templates/nginx/_configs/richie.conf.j2"
+                                "apps/atkans/templates/nginx/_configs/atkans.conf.j2"
                             ],
                             "name": "nginx",
                             "templates": [
-                                "apps/richie/templates/nginx/dc.yml.j2",
-                                "apps/richie/templates/nginx/svc.yml.j2"
+                                "apps/atkans/templates/nginx/dc.yml.j2",
+                                "apps/atkans/templates/nginx/svc.yml.j2"
                             ],
                             "environment_variables": None
                         },
@@ -73,9 +73,9 @@ DOCUMENTATION = """
                             "configs": [],
                             "name": "postgresql",
                             "templates": [
-                                "apps/richie/templates/postgresql/dc.yml.j2",
-                                "apps/richie/templates/postgresql/ep.yml.j2",
-                                "apps/richie/templates/postgresql/svc.yml.j2"
+                                "apps/atkans/templates/postgresql/dc.yml.j2",
+                                "apps/atkans/templates/postgresql/ep.yml.j2",
+                                "apps/atkans/templates/postgresql/svc.yml.j2"
                             ],
                             "environment_variables": None
                         },
@@ -83,34 +83,34 @@ DOCUMENTATION = """
                             "configs": [],
                             "name": "elasticsearch",
                             "templates": [
-                                "apps/richie/templates/elasticsearch/dc.yml.j2",
-                                "apps/richie/templates/elasticsearch/svc.yml.j2"
+                                "apps/atkans/templates/elasticsearch/dc.yml.j2",
+                                "apps/atkans/templates/elasticsearch/svc.yml.j2"
                             ],
                             "environment_variables": None
                         },
                         {
                             "configs": [],
-                            "name": "richie",
+                            "name": "atkans",
                             "templates": [
-                                "apps/richie/templates/richie/job_regenerate_indexes.yml.j2",
-                                "apps/richie/templates/richie/dc.yml.j2",
-                                "apps/richie/templates/richie/route.yml.j2",
-                                "apps/richie/templates/richie/job_collectstatic.yml.j2",
-                                "apps/richie/templates/richie/svc.yml.j2",
-                                "apps/richie/templates/richie/job_db_migrate.yml.j2"
+                                "apps/atkans/templates/atkans/job_regenerate_indexes.yml.j2",
+                                "apps/atkans/templates/atkans/dc.yml.j2",
+                                "apps/atkans/templates/atkans/route.yml.j2",
+                                "apps/atkans/templates/atkans/job_collectstatic.yml.j2",
+                                "apps/atkans/templates/atkans/svc.yml.j2",
+                                "apps/atkans/templates/atkans/job_db_migrate.yml.j2"
                             ],
                             "environment_variables": None
                         }
                     ],
                     "volumes": [
-                        "apps/richie/templates/_volumes/static.yml.j2",
-                        "apps/richie/templates/_volumes/media.yml.j2"
+                        "apps/atkans/templates/_volumes/static.yml.j2",
+                        "apps/atkans/templates/_volumes/media.yml.j2"
                     ],
                     vars: [
                         {
                             "type": "all",
                             "name": "main",
-                            "path": "apps/richie/vars/all/main.yml",
+                            "path": "apps/atkans/vars/all/main.yml",
                         },
                     ],
                     settings: {

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atkans
+    service: nginx
+    service_prefix: "{{ prefix }}"
+    deployment_stamp: "{{ deployment_stamp }}"
+    type: static-service
+    removable: "no"
+  name: "atkans-nginx-{{ prefix }}"
+  namespace: "{{ namespace_name }}"
+spec:
+  ports:
+    - name: {{ atkans_nginx_port }}-tcp
+      port: {{ atkans_nginx_port }}
+      protocol: TCP
+      targetPort: {{ atkans_nginx_port }}
+    - name: "{{ atkans_nginx_healthcheck_port }}-tcp"
+      port: {{ atkans_nginx_healthcheck_port }}
+      protocol: TCP
+      targetPort: {{ atkans_nginx_healthcheck_port }}
+  type: ClusterIP
+  selector:
+    app: atkans
+    deployment: "atkans-nginx-{{ deployment_stamp | default('undefined', true) }}"

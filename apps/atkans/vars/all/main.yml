@@ -1,0 +1,62 @@
+# Application default configuration
+
+# -- route
+atkans_host: "atkans.{{ namespace_name }}.{{ domain_name }}"
+
+# -- nginx
+atkans_nginx_image_name: "fundocker/atkans-demo-nginx"
+atkans_nginx_image_tag: "1.1"
+atkans_nginx_port: 8081
+atkans_nginx_replicas: 1
+atkans_nginx_htpasswd_secret_name: "atkans-htpasswd"
+atkans_nginx_healthcheck_port: 5000
+atkans_nginx_healthcheck_endpoint: "/__healthcheck__"
+atkans_nginx_status_endpoint: "/__status__"
+atkans_nginx_admin_ip_whitelist: []
+atkans_nginx_bypass_htaccess_ip_whitelist: []
+atkans_nginx_static_cache_expires: "1M"
+atkans_nginx_media_cache_expires: "1M"
+
+
+atkans_database_engine: "django.db.backends.postgresql_psycopg2"
+atkans_database_host: "postgresql"
+atkans_database_port: 5432
+atkans_database_name: "atkansdatabase"
+atkans_database_secret_name: "atkans-database-{{ atkans_vault_checksum | default('undefined_atkans_vault_checksum') }}"
+
+# -- atkans
+atkans_image_name: "atkans"
+atkans_image_tag: "1.0"
+# The image pull secret name should match the name of your secret created to
+# login to your private docker registry
+atkans_image_pull_secret_name: ""
+atkans_django_port: 8000
+atkans_app_replicas: 1
+atkans_django_settings_module: "atkans.settings"
+atkans_django_configuration: "Production"
+atkans_secret_name: "atkans-{{ atkans_vault_checksum | default('undefined_atkans_vault_checksum') }}"
+atkans_activate_http_basic_auth: false
+
+# -- volumes
+# volume sizes with power of 2 suffices (Ki, Mi, Gi, Ti...) e.g 2Gi and 0 for no volume.
+atkans_media_volume_size: 2Gi
+atkans_should_activate_media_volume: true
+
+# -- resources requests
+{% set app_resources = {
+  "requests": {
+    "cpu": "5m",
+    "memory": "512Mi"
+  }
+} %}
+
+atkans_app_resources: "{{ app_resources }}"
+atkans_app_job_db_migrate_resources: "{{ app_resources }}"
+atkans_app_job_atkans_init_resources: "{{ app_resources }}"
+atkans_app_job_bootstrap_elasticsearch_resources: "{{ app_resources }}"
+
+atkans_nginx_resources:
+  requests:
+    cpu: 5m
+    memory: 20Mi
+

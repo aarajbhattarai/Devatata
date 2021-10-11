@@ -1,3 +1,0 @@
-databases:
-  - engine: "mongodb"
-    release: "3.2"

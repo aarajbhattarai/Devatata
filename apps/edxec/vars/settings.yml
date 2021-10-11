@@ -1,3 +1,0 @@
-databases:
-  - engine: "mysql"
-    release: "5.7"

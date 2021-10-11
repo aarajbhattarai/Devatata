@@ -1,5 +1,5 @@
 # Variables specific to the pre-production environment
-richie_django_configuration: PreProduction
+atkans_django_configuration: PreProduction
 acme_env: live
 
 # Endpoints IP

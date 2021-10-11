@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atkans
+    service: nginx
+    version: "{{ atkans_nginx_image_tag }}"
+    deployment_stamp: "{{ deployment_stamp }}"
+  name: "atkans-nginx-{{ deployment_stamp }}"
+  namespace: "{{ namespace_name }}"
+spec:
+  ports:
+    - name: {{ atkans_nginx_port }}-tcp
+      port: {{ atkans_nginx_port }}
+      protocol: TCP
+      targetPort: {{ atkans_nginx_port }}
+    - name: "{{ atkans_nginx_healthcheck_port }}-tcp"
+      port: {{ atkans_nginx_healthcheck_port }}
+      protocol: TCP
+      targetPort: {{ atkans_nginx_healthcheck_port }}
+  selector:
+    app: atkans
+    deployment: "atkans-nginx-{{ deployment_stamp }}"
+  type: ClusterIP

@@ -6,7 +6,7 @@ apps:
   - name: marsha
   - name: flower
   - name: forum
-  - name: richie
+  - name: atkans
   - name: nextcloud
   - name: etherpad
   - name: edxapp

@@ -31,28 +31,28 @@
 # services that cannot be guessed while scanning the `apps` directory.
 #
 # Example: let's say that for your eugene customer, you have defined a
-# particular "host" for the "postgresql" service of the "richie" application,
+# particular "host" for the "postgresql" service of the "atkans" application,
 # e.g.:
 #
 #     # group_vars/customer/eugene.yml
 #     apps:
-#       - name: "richie"
+#       - name: "atkans"
 #         services:
 #           - name: "postgresql"
 #             host: "pg.foo.com"
 #
 # While scanning the `apps/` folder, the `available_apps` var definition for the
-# "richie" application will be:
+# "atkans" application will be:
 #
 #     {
-#       "name": "richie",
+#       "name": "atkans",
 #       "services": [
 #         {
 #           "name": "postgresql",
 #           "templates": [
-#             "apps/richie/templates/postgresql/dc.yml.j2",
-#             "apps/richie/templates/postgresql/ep.yml.j2",
-#             "apps/richie/templates/postgresql/svc.yml.j2"
+#             "apps/atkans/templates/postgresql/dc.yml.j2",
+#             "apps/atkans/templates/postgresql/ep.yml.j2",
+#             "apps/atkans/templates/postgresql/svc.yml.j2"
 #           ]
 #         }
 #       ]
@@ -61,15 +61,15 @@
 # And the final (merged) application definition:
 #
 #     {
-#       "name": "richie",
+#       "name": "atkans",
 #       "services": [
 #         {
 #           "name": "postgresql",
 #           "host": "pg.foo.com",
 #           "templates": [
-#             "apps/richie/templates/postgresql/dc.yml.j2",
-#             "apps/richie/templates/postgresql/ep.yml.j2",
-#             "apps/richie/templates/postgresql/svc.yml.j2"
+#             "apps/atkans/templates/postgresql/dc.yml.j2",
+#             "apps/atkans/templates/postgresql/ep.yml.j2",
+#             "apps/atkans/templates/postgresql/svc.yml.j2"
 #           ]
 #         }
 #       ]
@@ -107,12 +107,12 @@
 # If the playbook is invoqued with the apps_filter extra var, we restrict apps
 # to the list passed as an argument, e.g.:
 #
-#     $ ansible-playbook foo.yml -e "apps_filter='richie,edxapp'"
+#     $ ansible-playbook foo.yml -e "apps_filter='atkans,edxapp'"
 #
 # This task will build the jmespath query to restrict apps to the selected
 # one(s), e.g.:
 #
-#    [?name=='richie' || name=='edxapp']
+#    [?name=='atkans' || name=='edxapp']
 - name: Set app filtering query
   set_fact:
     # We use escaped double quotes in the first regex_replace filter to be able

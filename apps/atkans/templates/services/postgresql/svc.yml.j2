@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: atkans
+    service: postgresql
+    version: "{{ atkans_database_image_tag }}"
+    deployment_stamp: "{{ deployment_stamp }}"
+  # name of the service should be database host name in settings
+  name: "atkans-postgresql-{{ deployment_stamp }}"
+  namespace: "{{ namespace_name }}"
+spec:
+  ports:
+    - name: "{{ atkans_database_port }}-tcp"
+      port: {{ atkans_database_port }}
+      protocol: TCP
+      targetPort: {{ atkans_database_port }}
+# As commented in the ad hoc endpoint, the endpoint name points to this service
+# so that it does not rely on a deployment configuration when the "env_type" is
+# not trashable. In this case, we use a PostgreSQL cluster outside of
+# k8s.
+{% if env_type in trashable_env_types %}
+  selector:
+    app: atkans
+    service: postgresql
+    deployment: "atkans-postgresql-{{ deployment_stamp }}"
+  type: ClusterIP
+{% endif%}

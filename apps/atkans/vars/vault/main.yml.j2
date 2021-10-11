@@ -1,0 +1,15 @@
+customer: {{ customer }}
+env_type: {{ env_type }}
+
+# postgresql
+
+DB_USER:
+DB_USER: {{ postgresql_credentials.user }}
+DB_PASSWORD: {{ postgresql_credentials.password }}
+
+# atkans
+DJANGO_SECRET_KEY: {{ lookup('password', '/dev/null length=50') }}
+DJANGO_SENTRY_DSN: https://super:atkans@sentry.io/foo
+DJANGO_AWS_CLOUDFRONT_DOMAIN: xxxxxxxxxxxxx.cloudfront.net
+DJANGO_AWS_ACCESS_KEY_ID: XXXXXXXXXXXXXXXXXXXX
+DJANGO_AWS_SECRET_ACCESS_KEY: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

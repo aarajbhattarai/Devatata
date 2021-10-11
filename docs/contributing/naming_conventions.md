@@ -6,5 +6,5 @@ conventions.
 
 | 0bject type             | Pattern                        | Example            |
 | :---------------------- | :----------------------------- | :----------------- |
-| volume                  | `{{ service }}-v-{{ name }}`   | `richie-v-media`   |
-| persistent volume claim | `{{ service }}-pvc-{{ name }}` | `richie-pvc-media` |
+| volume                  | `{{ service }}-v-{{ name }}`   | `atkans-v-media`   |
+| persistent volume claim | `{{ service }}-pvc-{{ name }}` | `atkans-pvc-media` |

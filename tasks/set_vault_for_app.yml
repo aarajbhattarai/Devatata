@@ -11,8 +11,8 @@
   set_fact:
     app_vault_checksum: "{{ (app_vault.stat.exists and app_vault.stat.isreg) | ternary(app_vault.stat.checksum, '') }}"
 
-# Set dynamic vars for this application's vault, i.e. richie_vault and
-# richie_vault_checksum for the "richie" application name. This is useful if you
+# Set dynamic vars for this application's vault, i.e. atkans_vault and
+# atkans_vault_checksum for the "atkans" application name. This is useful if you
 # want to refer to the application vault's checksum in your application defaults.
 - name: Set application vault variables
   set_fact:

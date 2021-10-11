@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "atkans-app-dbmigrate-{{ job_stamp }}"
+  namespace: "{{ namespace_name }}"
+  labels:
+    app: atkans
+    service: atkans
+    version: "{{ atkans_image_tag }}"
+    deployment_stamp: "{{ deployment_stamp }}"
+    job_stamp: "{{ job_stamp }}"
+spec:
+  template:
+    metadata:
+      name: "atkans-app-dbmigrate-{{ job_stamp }}"
+      labels:
+        app: atkans
+        service: atkans
+        version: "{{ atkans_image_tag }}"
+        deployment_stamp: "{{ deployment_stamp }}"
+        job_stamp: "{{ job_stamp }}"
+    spec:
+{% set image_pull_secret_name = atkans_image_pull_secret_name | default(none) or default_image_pull_secret_name %}
+{% if image_pull_secret_name is not none %}
+      imagePullSecrets:
+        - name: "{{ image_pull_secret_name }}"
+{% endif %}
+      containers:
+        - name: atkans-dbmigrate
+          image: "{{ atkans_image_name }}:{{ atkans_image_tag }}"
+          imagePullPolicy: Always
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: "{{ atkans_django_settings_module }}"
+            - name: DJANGO_CONFIGURATION
+              value: "{{ atkans_django_configuration }}"
+            - name: DB_ENGINE
+              value: "{{ atkans_database_engine }}"
+            - name: DB_NAME
+              value: "{{ atkans_database_name }}"
+            - name: DB_HOST
+              value: "atkans-{{ atkans_database_host }}-{{ deployment_stamp }}"
+            - name: DB_PORT
+              value: "{{ atkans_database_port }}"
+          envFrom:
+            - secretRef:
+                name: "{{ atkans_secret_name }}"
+            - configMapRef:
+                name: "atkans-app-dotenv-{{ deployment_stamp }}"
+          command:
+            - "bash"
+            - "-c"
+            - python manage.py migrate
+          resources: {{ atkans_app_job_db_migrate_resources }}
+      restartPolicy: Never
+      securityContext:
+        runAsUser: {{ container_uid }}
+        runAsGroup: {{ container_gid }}

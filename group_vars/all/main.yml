@@ -63,7 +63,7 @@ deployment_stamp: null
 # Similarly to deployment stamps, we make job identifiers unique for each
 # running playbook (deploy, create_object) by adding the job datetime (with
 # seconds precision) to the job name, e.g.
-# richie-collecstatic-j-180611-08h46m30s. Default value is null as it should
+# atkans-collecstatic-j-180611-08h46m30s. Default value is null as it should
 # never be used as is, but initiated in a playbook using a "set_fact" task.
 job_stamp: null
 

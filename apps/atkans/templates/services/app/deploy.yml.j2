@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  labels:
+    app: atkans
+    service: atkans
+    version: "{{ atkans_image_tag }}"
+    deployment_stamp: "{{ deployment_stamp }}"
+  name: "atkans-app-{{ deployment_stamp }}"
+  namespace: "{{ namespace_name }}"
+spec:
+  replicas: {{ atkans_app_replicas }}
+  selector:
+    matchLabels:
+      app: atkans
+      service: atkans
+      version: "{{ atkans_image_tag }}"
+      deployment: "atkans-app-{{ deployment_stamp }}"
+      deployment_stamp: "{{ deployment_stamp }}"
+  template:
+    metadata:
+      labels:
+        app: atkans
+        service: atkans
+        version: "{{ atkans_image_tag }}"
+        deployment: "atkans-app-{{ deployment_stamp }}"
+        deployment_stamp: "{{ deployment_stamp }}"
+    spec:
+      # Prefer running pods on different nodes for redundancy
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: deployment
+                      operator: In
+                      values:
+                        - "atkans-app-{{ deployment_stamp }}"
+                topologyKey: kubernetes.io/hostname
+{% set image_pull_secret_name = atkans_image_pull_secret_name | default(none) or default_image_pull_secret_name %}
+{% if image_pull_secret_name is not none %}
+      imagePullSecrets:
+        - name: "{{ image_pull_secret_name }}"
+{% endif %}
+      containers:
+        - name: atkans
+          image: "{{ atkans_image_name }}:{{ atkans_image_tag }}"
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /__heartbeat__
+              port: {{ atkans_django_port }}
+              httpHeaders:
+                - name: Host
+                  value: "{{ atkans_host }}"
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /__lbheartbeat__
+              port: {{ atkans_django_port }}
+              httpHeaders:
+                - name: Host
+                  value: "{{ atkans_host }}"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: "{{ atkans_django_settings_module }}"
+            - name: DJANGO_CONFIGURATION
+              value: "{{ atkans_django_configuration }}"
+            - name: DB_ENGINE
+              value: "{{ atkans_database_engine }}"
+            - name: DB_NAME
+              value: "{{ atkans_database_name }}"
+            - name: DB_HOST
+              value: "atkans-{{ atkans_database_host }}-{{ deployment_stamp }}"
+            - name: DB_PORT
+              value: "{{ atkans_database_port }}"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "{{ atkans_host | blue_green_hosts }}"
+            - name: RICHIE_ES_HOST
+              value: "atkans-{{ atkans_elasticsearch_host }}-{{ deployment_stamp }}"
+          envFrom:
+            - secretRef:
+                name: "{{ atkans_secret_name }}"
+            - configMapRef:
+                name: "atkans-app-dotenv-{{ deployment_stamp }}"
+          resources: {{ atkans_app_resources }}
+{% if atkans_should_activate_media_volume %}
+          volumeMounts:
+            - name: atkans-v-media
+              mountPath: /data/media
+      volumes:
+        - name: atkans-v-media
+          persistentVolumeClaim:
+            claimName: atkans-pvc-media
+{% endif %}
+      securityContext:
+        runAsUser: {{ container_uid }}
+        runAsGroup: {{ container_gid }}
